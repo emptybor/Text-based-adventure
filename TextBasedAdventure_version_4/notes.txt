@@ -1,0 +1,8 @@
+Funktionen hinzufügen:
+
+- FullScreen ON/OFF
+↳ UI skalieren
+- Optionsmenu
+- setupState
+- Admin Möglichkeiten
+- MouseHandler
