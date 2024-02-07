@@ -1,0 +1,19 @@
+﻿Funktionen hinzufügen:
+
+- UI skalieren
+- Optionsmenu
+-> New hinzufuegen
+-> Controls hinzufuegen
+
+- Inventar
+-> Items zu Klassen machen, ggf auch andere Waffen hinzufugen
+-> Items auch abspeichern lassen
+- Stages
+-> Einmalige Stages implementieren
+-> Story implementieren
+- Admin Möglichkeiten
+- MouseHandler
+
+- Bug's
+
+-> Namen Eingabe "flackern" verhindern
