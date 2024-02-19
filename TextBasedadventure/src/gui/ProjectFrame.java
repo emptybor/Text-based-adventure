@@ -1,8 +1,11 @@
 package gui;
 
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.Image;
+import java.awt.Point;
+import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -22,6 +25,9 @@ public class ProjectFrame{
 		window.setTitle("Text based adventure");
 		Image image = new ImageIcon("icon.png").getImage();
 		window.setIconImage(image);
+		
+		Cursor invisibleCursor = Toolkit.getDefaultToolkit().createCustomCursor(new ImageIcon(new byte[0], "invisibleCursor").getImage(),new Point(0, 0),"invisibleCursor");
+		window.setCursor(invisibleCursor);
 		window.setSize(width, height);
 		window.setLocationRelativeTo(null);
 		window.setResizable(false);

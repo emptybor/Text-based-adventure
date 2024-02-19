@@ -21,15 +21,14 @@ public class Axe extends Item{
 	
 	public void use() {
 		
-		if(isEquiped == true) {
+		if(isEquiped() == true) {
 			pp.player.currentWeapon = "";
-			isEquiped = false;
+			setEquiped(false);
 		}
 		else {
 			pp.player.currentWeapon = getName();
-			isEquiped = true;
+			setEquiped(true);
 		}
-		
 	}
 
 }

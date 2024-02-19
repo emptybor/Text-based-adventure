@@ -1,4 +1,15 @@
+
 package main;
+
+import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.Point;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.ImageIcon;
+import javax.swing.JTextField;
 
 import gui.ProjectFrame;
 import gui.ProjectPanel;
@@ -7,9 +18,11 @@ public class InputHandler {
 	
 	ProjectPanel pp;
 	
+	private boolean spacePressed = false;
 	private boolean enterPressed = false;
 	private boolean escPressed = false;
 	private boolean ePressed = false;
+	private boolean tPressed = false;
 	
 	public InputHandler(ProjectPanel pp) {
 		this.pp = pp;
@@ -21,7 +34,8 @@ public class InputHandler {
 			
 			if(checkEnterPressed() == true) {
 				if(pp.isSetup == false) {
-				pp.gameState = GameState.SetupState;
+					setupTextField();
+					pp.gameState = GameState.SetupState;
 				}else {
 					pp.stageH.prepareForNextStage();
 					if(pp.stageH.stageNum == 2 || pp.stageH.stageNum == 1) {
@@ -35,13 +49,15 @@ public class InputHandler {
 			}
 		
 			if(pp.gameState == GameState.SetupState) {
-				
+												
 				if(checkEnterPressed() == true) {
 					if(pp.ui.playerNameTextField.getText().isEmpty() == false) {
 					pp.isSetup = true;
 					pp.player.setName(pp.ui.playerNameTextField.getText());
+					pp.loadSave.saveStats();
+					pp.loadSave.saveConfig();
 					ProjectFrame.window.requestFocus();
-					pp.remove(pp.ui.playerNameTextField);
+					pp.removeAll();
 					pp.stageH.setStartDialogue();
 				}
 				}
@@ -70,6 +86,10 @@ public class InputHandler {
 						pp.gameState = pp.tempGameState;
 					}
 					
+					if(checkSPACEPressed() == true) {
+						pp.commandNum++;
+					}
+					
 					checkCommandNum(5);
 					
 				}
@@ -94,6 +114,10 @@ public class InputHandler {
 				    	pp.tempGameState = null;
 					}
 					
+					if(checkSPACEPressed() == true) {
+						pp.commandNum++;
+					}
+					
 					checkCommandNum(3);
 					
 				}
@@ -113,6 +137,10 @@ public class InputHandler {
 						pp.optionsSubstate = 0;
 						pp.gameState = pp.tempGameState;
 				    	pp.tempGameState = null;
+					}
+					
+					if(checkSPACEPressed() == true) {
+						pp.commandNum++;
 					}
 					
 					checkCommandNum(1);
@@ -140,6 +168,10 @@ public class InputHandler {
 		    			pp.commandNum = 1;
 		    	    	pp.gameState = pp.tempGameState;
 		    	    }
+		    		
+		    		if(checkSPACEPressed() == true) {
+						pp.commandNum++;
+					}
 			}
 			
 			if(pp.gameState == GameState.InventoryState) {
@@ -151,17 +183,38 @@ public class InputHandler {
 				if(checkEnterPressed() == true) {
 					if(pp.inventory.getLength() > 0) {
 					pp.inventory.use(pp.inventory.items[pp.inventory.commandNumToItemIndex(pp.commandNum)].getName());
+					pp.inventory.checkEquippedItem();
 					pp.inventory.checkLength();
 					}
+				}
+				
+				if(checkSPACEPressed() == true) {
+					pp.commandNum++;
 				}
 				
 				checkCommandNum(pp.inventory.getLength());
 				
 			}
 			
+			if(pp.gameState == GameState.StatisticState) {
+				
+				checkCommandNum(1);
+				
+				if(checkEnterPressed() == true) {
+					pp.commandNum = 1;
+					pp.gameState = pp.tempGameState;
+				}
+				if(checkTPressed() == true) {
+					pp.commandNum = 1;
+					pp.gameState = pp.tempGameState;
+				}
+				
+			}
+			
 			if(pp.gameState == GameState.DialogueState) {
 				
-				pp.animH.showMessage();
+				pp.animH.subState = 3;
+				pp.animH.showAnimation();
 				
 				if(pp.animH.tempColumn % 3 == 0 && pp.animH.tempColumn != 0) {
 		    		
@@ -183,6 +236,7 @@ public class InputHandler {
 		    	}
 		    		
 		    		if(checkESCPressed() == true) {
+		    			pp.commandNum = 1;
 		    			pp.tempGameState = pp.gameState;
 		    			pp.gameState = GameState.OptionsState;
 			    }
@@ -191,6 +245,12 @@ public class InputHandler {
 		    	    	pp.tempGameState = pp.gameState;
 		    	    	pp.gameState = GameState.InventoryState;
 		    	    }
+		    		
+		    		if(checkTPressed() == true) {
+		    			pp.commandNum = 1;
+		    			pp.tempGameState = pp.gameState;
+		    			pp.gameState = GameState.StatisticState;
+			    }
 		    	
 			}
 		    
@@ -215,6 +275,15 @@ public class InputHandler {
 	    	    	pp.tempGameState = pp.gameState;
 	    	    	pp.gameState = GameState.InventoryState;
 	    	    }
+	    	    if(checkTPressed() == true) {
+	    	    	pp.commandNum = 1;
+	    			pp.tempGameState = pp.gameState;
+	    			pp.gameState = GameState.StatisticState;
+	    	    }
+	    	    
+	    	    if(checkSPACEPressed() == true) {
+					pp.commandNum++;
+				}
 	    	    
 	    	    checkCommandNum(pp.stageH.checkChoiceLength());
 	        }
@@ -238,6 +307,15 @@ public class InputHandler {
 		    			pp.commandNum = 1;
 		    	    	pp.gameState = GameState.OptionsState;
 		    	    }
+		    		if(checkTPressed() == true) {
+		    			pp.commandNum = 1;
+		    			pp.tempGameState = pp.gameState;
+		    			pp.gameState = GameState.StatisticState;
+		    		}
+		    		
+		    		if(checkSPACEPressed() == true) {
+						pp.commandNum++;
+					}
 		    		
 		    		if(pp.fightH.currentEnemy.getHP() <= 0 || pp.player.getHP() <= 0) {
 		    			pp.fightH.endFight();
@@ -264,12 +342,20 @@ public class InputHandler {
 	    		if(checkESCPressed() == true) {
 	    			pp.exit();
 	    	    }
+	    		
+	    		if(checkSPACEPressed() == true) {
+					pp.commandNum++;
+				}
 	        	
 	        }
 	        
 	        if(pp.gameState == GameState.TransitionState) {
 	        	
-	        	if(pp.animH.showTransition() == true) {
+	        	pp.commandNum = 0;
+	        	pp.animH.subState = 2;
+	        	
+	        	if(pp.animH.showAnimation() == true) {
+	        		pp.commandNum = 1;
 	        		pp.gameState = pp.animH.nextGameState;
 	        		pp.animH.nextGameState = null;
 	        	}
@@ -316,6 +402,32 @@ public class InputHandler {
 		}
 	}
 	
+	public void setTPressed(boolean value) {
+		
+		if(value == true) {
+			if(pp.ui.keyH.isKeyPressed() == false) {
+				pp.ui.keyH.setKeyPressed(true);
+				tPressed = value;
+			}
+		}
+		else if(value == false) {
+			tPressed = value;
+		}
+	}
+	
+	public void setSPACEPressed(boolean value) {
+		
+		if(value == true) {
+			if(pp.ui.keyH.isKeyPressed() == false) {
+				pp.ui.keyH.setKeyPressed(true);
+				spacePressed = value;
+			}
+		}
+		else if(value == false) {
+			spacePressed = value;
+		}
+	}
+	
 	public boolean checkEnterPressed() {
 		if(enterPressed == true) {
 			enterPressed = false;
@@ -346,6 +458,26 @@ public class InputHandler {
 		}
 		}
 	
+	public boolean checkTPressed() {
+		if(tPressed == true) {
+			tPressed = false;
+			return true;
+		}
+		else {
+			return false;
+		}
+		}
+	
+	public boolean checkSPACEPressed() {
+		if(spacePressed == true) {
+			spacePressed = false;
+			return true;
+		}
+		else {
+			return false;
+		}
+		}
+	
 	public void checkCommandNum(int length) {
 
 		if(pp.commandNum < 1) {
@@ -355,5 +487,29 @@ public class InputHandler {
 		if(pp.commandNum > length) {
 			pp.commandNum = 1;
 		}
+	}
+	
+	public void setupTextField() {
+		
+		pp.ui.playerNameTextField = new JTextField();
+		pp.ui.playerNameTextField.setBounds((pp.screenWidth / 2) - pp.tileSizeX * 2, pp.tileSizeY * 3, pp.tileSizeX * 4, (int)(pp.tileSizeY * 0.8));
+		pp.ui.playerNameTextField.setFont(pp.ui.g2.getFont().deriveFont(pp.ui.fontScale(2)));
+		pp.ui.playerNameTextField.setHorizontalAlignment(JTextField.CENTER);
+		pp.ui.playerNameTextField.setBackground(Color.BLACK);
+		pp.ui.playerNameTextField.setForeground(Color.WHITE);
+		pp.ui.playerNameTextField.setBorder(null);
+		pp.ui.playerNameTextField.setCaretColor(new Color(0, 0, 0, 0));
+		Cursor invisibleCursor = Toolkit.getDefaultToolkit().createCustomCursor(new ImageIcon(new byte[0], "invisibleCursor").getImage(),new Point(0, 0),"invisibleCursor");
+		pp.ui.playerNameTextField.setCursor(invisibleCursor);
+		pp.ui.playerNameTextField.setVisible(true);
+		pp.ui.playerNameTextField.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				pp.ui.keyH.setKeyPressed(false);
+				setEnterPressed(true);
+				}});
+		
+		pp.add(pp.ui.playerNameTextField);
 	}
 }

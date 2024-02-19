@@ -1,23 +1,25 @@
-﻿Funktionen hinzufügen:
+﻿Funktionen hinzufügen (sortiert nach Wichtigkeit):
 
-- UI skalieren
-- Optionsmenu
--> New hinzufuegen
--> Controls hinzufuegen
+- Story
 
-- Inventar
--> Items zu Klassen machen, ggf auch andere Waffen hinzufugen
--> Items auch abspeichern lassen
-- Stages
--> Einmalige Stages implementieren
--> Story implementieren
-- Admin Möglichkeiten
-- MouseHandler
+-> Zum Bürgermeister gehen
+-> Auftrag erhalten, um einen gesuchten Goblin zu toeten
+-> Belohnung Bronzerang
 
--> Mit Tab ansteuern
--> erkundete Bereiche kennzeichnen
+- Inventory
+-> Inventory Ansicht überarbeiten
+-> Ausgewaehltes Item "vergrößern"
+-> Ausgewaehltes Item Text mit anzeigen
+-> Drop down menu -> Mehr Items in der Ansicht verfügbar
+-> "herunterscrollen" ermöglichen
 
 - Bug's
 
--> Namen Eingabe "flackern" verhindern
--> Beim Speichern und neu Öffnen eines anderen stages wird der Kampf "übersprungen"
+-> Namen Eingabe "flackern" verhindern -> Vielleicht Reihenfolge von "requestFocus" und "repaint"?
+
+- Admin Möglichkeiten
+
+-> erkundete Bereiche kennzeichnen
+-> Level durch Reputation ersetzen.
+-> Damage als "double" definieren
+

@@ -23,8 +23,7 @@ public class LoadSaveHandler {
 		StatisticData ds = new StatisticData();
 
 		try {
-			
-			ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(new File("stats.dat")));
+			ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(new File("../stats.dat")));
 
 			ds.playerLevel = pp.player.getLevel();
 			ds.playerMaxHP = pp.player.getMaxHP();
@@ -59,7 +58,7 @@ public class LoadSaveHandler {
 
 		try {
 			
-			ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("config.dat"));
+			ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("../config.dat"));
 
 			ds.fullScreenOn = pp.fullScreenOn;
 			ds.isSetup = pp.isSetup;
@@ -77,7 +76,7 @@ public class LoadSaveHandler {
 	public void loadStats() {
 		
 		try {
-			ObjectInputStream ois = new ObjectInputStream(new FileInputStream(new File("stats.dat")));
+			ObjectInputStream ois = new ObjectInputStream(new FileInputStream(new File("../stats.dat")));
 			
 			StatisticData ds = (StatisticData)ois.readObject();
 					
@@ -113,7 +112,7 @@ public class LoadSaveHandler {
 	public void loadConfig() {
 		
 		try {
-			ObjectInputStream ois = new ObjectInputStream(new FileInputStream(new File("config.dat")));
+			ObjectInputStream ois = new ObjectInputStream(new FileInputStream(new File("../config.dat")));
 			
 			ConfigData ds = (ConfigData)ois.readObject();
 					

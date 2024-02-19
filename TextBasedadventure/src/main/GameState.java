@@ -6,6 +6,7 @@ public enum GameState {
 	SetupState,
 	OptionsState,
 	InventoryState,
+	StatisticState,
 	AlertState,
 	DialogueState,
 	ChoiceState,

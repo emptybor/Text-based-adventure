@@ -2,10 +2,13 @@ package gui;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.Stroke;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.Area;
@@ -13,6 +16,7 @@ import java.awt.geom.Rectangle2D;
 import java.io.IOException;
 import java.io.InputStream;
 
+import javax.swing.ImageIcon;
 import javax.swing.JTextField;
 
 import main.GameState;
@@ -61,32 +65,7 @@ public class UI {
 		
 		g2.setFont(maruMonica);
 		g2.setFont(g2.getFont().deriveFont(Font.BOLD, fontScale(1.5)));
-		
-		setupTextField();
-		
-	}
-	
-	public void setupTextField() {
-		
-		playerNameTextField = new JTextField();
-		playerNameTextField.setBounds((pp.screenWidth / 2) - pp.tileSizeX * 2, pp.tileSizeY * 3, pp.tileSizeX * 4, (int)(pp.tileSizeY * 0.8));
-		playerNameTextField.setFont(g2.getFont().deriveFont(fontScale(2)));
-		playerNameTextField.setHorizontalAlignment(JTextField.CENTER);
-		playerNameTextField.setBackground(Color.BLACK);
-		playerNameTextField.setForeground(Color.WHITE);
-		playerNameTextField.setBorder(null);
-		playerNameTextField.setCaretColor(new Color(0, 0, 0, 0));
-		playerNameTextField.setVisible(true);
-		playerNameTextField.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				pp.ui.keyH.setKeyPressed(false);
-				pp.inputH.setEnterPressed(true);
-				}});
-		
-		pp.add(playerNameTextField);
-
+				
 	}
 	
 	public void draw(Graphics2D g2) {
@@ -103,13 +82,16 @@ public class UI {
 		if(pp.gameState == GameState.InventoryState) {
 		drawInventory();
 		}
+		if(pp.gameState == GameState.StatisticState) {
+		drawStatistics();
+		}
 		if(pp.gameState == GameState.AlertState) {
 		drawAlert();
 		drawAlertChoice();
 	    }
 		if(pp.gameState == GameState.DialogueState) {
-        drawMessage();
-        drawPlayerStats();
+		drawAnimation();	
+		drawPlayerStats();
         }
         if(pp.gameState == GameState.ChoiceState) {
         drawMessage();
@@ -125,8 +107,7 @@ public class UI {
         drawLose();
         }
         if(pp.gameState == GameState.TransitionState) {
-        drawLose();
-        drawTransition();
+        drawAnimation();
         }
                 
 	}
@@ -153,16 +134,14 @@ public class UI {
 		oldColor = pp.getBackground();
 		oldStroke = g2.getStroke();
 		
-		playerNameTextField.repaint();
 		if(playerNameTextField.hasFocus() == false) {
 			playerNameTextField.requestFocus();
 		}
-		
+		playerNameTextField.repaint();
 		g2.setColor(Color.BLACK);
 		
 		g2.fillRoundRect((pp.screenWidth / 2) - pp.tileSizeX * 3, pp.tileSizeY * 2, pp.tileSizeX * 6, pp.tileSizeY * 2, 35, 35);
 		
-		playerNameTextField.repaint();
 
 		g2.setColor(Color.WHITE);
 		g2.setStroke(new BasicStroke(5));
@@ -172,7 +151,6 @@ public class UI {
 		g2.setFont(g2.getFont().deriveFont(fontScale(2)));
 		g2.drawString("Enter your name", (pp.screenWidth / 2) - (getXStringLength("Enter your name") / 2), (int)(pp.tileSizeY * 2.6));
 		
-		playerNameTextField.repaint();
 		
 		g2.setFont(oldFont);
 		g2.setStroke(oldStroke);
@@ -356,7 +334,7 @@ public class UI {
 		
 		g2.drawString("CONTROLS", (int) x - (getXStringLength("CONTROLS") / 2), (int) y);
 		
-		g2.setFont(g2.getFont().deriveFont(fontScale(2.4)));
+		g2.setFont(g2.getFont().deriveFont(fontScale(2)));
 		
 		y = pp.tileSizeY * 6.2;
 		
@@ -375,33 +353,37 @@ public class UI {
 	    
 	    }
 		
-		g2.setFont(g2.getFont().deriveFont(fontScale(2)));
+		g2.setFont(g2.getFont().deriveFont(fontScale(1.7)));
 		g2.setStroke(new BasicStroke(2));
 		
 		x = pp.tileSizeX * 3;
-		y = pp.tileSizeY * 2.5;
+		y = pp.tileSizeY * 2.2;
 		g2.drawString("UP", (int) x, (int) y);
 		
-		y += pp.tileSizeY / 1.4;
+		y += pp.tileSizeY / 1.8;
 		
 		g2.drawString("DOWN", (int) x, (int) y);
 		
-		y += pp.tileSizeY / 1.4;
+		y += pp.tileSizeY / 0.9;
 		
 		g2.drawString("ENTER", (int) x, (int) y);
 		
-		y += pp.tileSizeY / 1.4;
+		y += pp.tileSizeY / 1.8;
 		
 		g2.drawString("OPTIONS", (int) x, (int) y);
 		
-		y += pp.tileSizeY / 1.4;
+		y += pp.tileSizeY / 1.8;
 		
 		g2.drawString("INVENTORY", (int) x, (int) y);
+		
+		y += pp.tileSizeY / 1.8;
+		
+		g2.drawString("STATISTICS", (int) x, (int) y);
 		
 		String text = "";
 		
 		x = pp.tileSizeX * 6;
-		y = pp.tileSizeY * 2.5;
+		y = pp.tileSizeY * 2.2;
 		text = "W";
 		g2.drawString(text, (int)x, (int)y);
 		g2.drawRect((int)x - 3, (int)y - getYStringLength(text), getXStringLength(text) + 6, getYStringLength(text) + 3);
@@ -410,31 +392,43 @@ public class UI {
 		text = "\u25B3";
 		g2.drawString(text, (int)x, (int)y);
 		g2.drawRect((int)x - 3, (int)y - getYStringLength(text), getXStringLength(text) + 6, getYStringLength(text) + 3);
-		
+						
 		x = pp.tileSizeX * 6;
-		y += pp.tileSizeY / 1.4;
+		y += pp.tileSizeY / 1.8;
+
 		text = "S";
 		g2.drawString(text, (int)x + 2, (int)y);
 		g2.drawRect((int)x - 3, (int)y - getYStringLength("W"), getXStringLength("W") + 6, getYStringLength("W") + 3);
-
+		
 		x += pp.tileSizeX / 2;
 		text = "\u25BD";
 		g2.drawString(text, (int)x, (int)y);
 		g2.drawRect((int)x - 3, (int)y - getYStringLength(text), getXStringLength(text) + 6, getYStringLength(text) + 3);
 
 		x = pp.tileSizeX * 6;
-		y += pp.tileSizeY / 1.4;
+		y += pp.tileSizeY / 1.8;
+		text = "SPACE";
+		g2.drawString(text, (int)x + 2, (int)y);
+		g2.drawRect((int)x - 3, (int)y - getYStringLength("SPACE"), getXStringLength("SPACE") + 6, getYStringLength("SPACE") + 3);
+
+		x = pp.tileSizeX * 6;
+		y += pp.tileSizeY / 1.8;
 		text = "ENTER";
 		g2.drawString(text, (int)x + 2, (int)y);
 		g2.drawRect((int)x - 3, (int)y - getYStringLength(text), getXStringLength(text) + 10, getYStringLength(text) + 3);
 
-		y += pp.tileSizeY / 1.4;
+		y += pp.tileSizeY / 1.8;
 		text = "ESC";
 		g2.drawString(text, (int)x + 2, (int)y);
 		g2.drawRect((int)x - 3, (int)y - getYStringLength(text), getXStringLength(text) + 10, getYStringLength(text) + 3);
 
-		y += pp.tileSizeY / 1.4;
+		y += pp.tileSizeY / 1.8;
 		text = "E";
+		g2.drawString(text, (int)x + 2, (int)y);
+		g2.drawRect((int)x - 3, (int)y - getYStringLength(text), getXStringLength(text) + 10, getYStringLength(text) + 3);
+
+		y += pp.tileSizeY / 1.8;
+		text = "T";
 		g2.drawString(text, (int)x + 2, (int)y);
 		g2.drawRect((int)x - 3, (int)y - getYStringLength(text), getXStringLength(text) + 10, getYStringLength(text) + 3);
 
@@ -528,6 +522,117 @@ public class UI {
 	
 	public void drawEmptyInventory() {
 		
+	}
+	
+	public void drawStatistics() {
+		
+		
+		oldFont = g2.getFont();
+		oldColor = pp.getBackground();
+		oldStroke = g2.getStroke();
+		
+		g2.setColor(Color.BLACK);
+		
+		g2.fillRoundRect((pp.screenWidth / 2) - (int) (pp.tileSizeX * 2.5), pp.tileSizeY / 2, pp.tileSizeX * 5, pp.tileSizeY * 6, 35, 35);
+		
+		g2.setColor(Color.WHITE);
+		g2.setStroke(new BasicStroke(5));
+		
+		g2.drawRoundRect(((pp.screenWidth / 2) - (int) (pp.tileSizeX * 2.5)) + 5, (pp.tileSizeY / 2) + 5, (pp.tileSizeX * 5) - 10, (pp.tileSizeY * 6) - 10, 25, 25);
+		
+		double x = pp.screenWidth / 2;
+		double y = pp.tileSizeY / 2;
+		
+		g2.setColor(Color.WHITE);
+		
+		g2.setFont(g2.getFont().deriveFont(fontScale(3.5)));
+				
+		y += pp.tileSizeY;
+		
+		g2.drawString("Statistics", getXForCenteredText("Statistics"), (int) y);
+		
+		x = pp.tileSizeX * 3;
+		
+		g2.setFont(g2.getFont().deriveFont(fontScale(1.8)));
+		
+		y += pp.tileSizeY * 0.6;
+		
+		g2.drawString("Name", (int) x, (int) y);
+		
+		y += pp.tileSizeY * 0.6;
+		
+		g2.drawString("Level", (int) x, (int) y);
+		
+		y += pp.tileSizeY * 0.6;
+		
+		g2.drawString("Exp", (int) x, (int) y);
+		
+		y += pp.tileSizeY * 0.6;
+		
+		g2.drawString("HP", (int) x, (int) y);
+		
+		y += pp.tileSizeY * 0.6;
+		
+		g2.drawString("Equipped", (int) x, (int) y);
+		
+		
+		
+		x = pp.tileSizeX * 5;
+		y = pp.tileSizeY + pp.tileSizeY / 2;
+		
+		g2.setFont(g2.getFont().deriveFont(fontScale(1.8)));
+		
+		y += pp.tileSizeY * 0.6;
+		
+		g2.drawString("" + pp.player.getName(), (int) x, (int) y);
+		
+		y += pp.tileSizeY * 0.6;
+		
+		g2.drawString("" + pp.player.getLevel(), (int) x, (int) y);
+		
+		y += pp.tileSizeY * 0.6;
+		
+		g2.drawString("" + pp.player.getExp() + "/" + pp.player.getNextExp(), (int) x, (int) y);
+		
+		drawValueBar(x + (pp.tileSizeX * 1.1), y - pp.tileSizeY * 0.4, pp.player.getExp(), pp.player.getNextExp());
+		
+		y += pp.tileSizeY * 0.6;
+		
+		g2.drawString("" + pp.player.getHP() + "/" + pp.player.getMaxHP(), (int) x, (int) y);
+		
+		drawValueBar(x + (pp.tileSizeX * 1.1), y - pp.tileSizeY * 0.4, pp.player.getHP(), pp.player.getMaxHP());
+		
+		y += pp.tileSizeY * 0.6;
+		
+		g2.drawString("" + pp.player.checkCurrentWeapon(), (int) x, (int) y);
+		
+		y += pp.tileSizeY * 1.2;
+		
+		g2.drawString("BACK", getXForCenteredText("BACK"), (int) y);
+		
+		x = pp.screenWidth / 2 - pp.tileSizeX;
+	    
+	    g2.setColor(Color.WHITE);
+	    g2.setFont(g2.getFont().deriveFont(fontScale(2.5)));
+	    
+	    if(pp.commandNum > 0 && pp.commandNum <= 5) {
+	    
+	    g2.drawString(">", (int) x, (int) y);
+		
+	    }
+	    
+		g2.setFont(oldFont);
+		g2.setStroke(oldStroke);
+		g2.setColor(oldColor);
+
+	}
+	
+	public void drawValueBar(double x, double y, int value, int maxValue) {
+		
+	    g2.setColor(new Color(60, 60, 60));
+	    g2.drawRoundRect((int)x, (int)y, (int)(pp.tileSizeX * 1.2), getYStringLength("NAME"), 5, 5);
+	    g2.setColor(Color.WHITE);
+	    g2.fillRoundRect((int)x + 3, (int)y + 3, (int)(((pp.tileSizeX * 1.2) / maxValue) * value) - 6, getYStringLength("NAME") - 6, 5, 5);
 	}
 	
 	public void drawMessage() {
@@ -909,7 +1014,7 @@ public class UI {
 		    
 	}
 	
-	public void drawTransition() {
+	public void drawTransitionGraduellDownwards() {
 		
 		pp.ui.oldColor = pp.getBackground();
 		pp.ui.oldStroke = g2.getStroke();
@@ -924,6 +1029,17 @@ public class UI {
 		g2.setColor(pp.ui.oldColor);
 	    g2.setStroke(pp.ui.oldStroke);
 	    g2.setFont(pp.ui.oldFont);
+	}
+	
+	public void drawAnimation() {
+		
+		switch(pp.animH.subState) {
+		
+		case 1: break;
+		case 2: drawLose(); drawTransitionGraduellDownwards(); break;
+		case 3: drawMessage(); break;
+		default: break;
+		}
 	}
 	
 	public void clear() {

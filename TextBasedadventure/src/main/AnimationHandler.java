@@ -11,7 +11,6 @@ public class AnimationHandler {
 	public String alertText = "";
 	public String fightText = "";
 
-	
 	public int messageSpeed = 2;
 	
 	public int messageSpeedCounter = 0;
@@ -29,6 +28,8 @@ public class AnimationHandler {
 	
 	public boolean messageCompleted = false;
 	
+	public int subState = 0;
+	
 	public GameState nextGameState;
 	
 	ProjectPanel pp;
@@ -36,6 +37,21 @@ public class AnimationHandler {
 	public AnimationHandler(ProjectPanel pp) {
 		super();
 		this.pp = pp;
+	}
+	
+	public boolean showAnimation() {
+		
+		boolean tempBoolean = false;
+		
+		switch(subState) {
+		case 1: tempBoolean = showTimeCount(); break;
+		case 2: tempBoolean = showTransition(); break;
+		case 3: showMessage(); break;
+
+		default: break;
+		}
+		
+		return tempBoolean;
 	}
 	
 	public boolean showTimeCount() {
@@ -55,6 +71,8 @@ public class AnimationHandler {
 		
 		timeCounter = 0;
 		timeLimit = 0;
+		
+		subState = 0;
 	}
 	public void showMessage() {
 		
@@ -95,6 +113,9 @@ public class AnimationHandler {
 		currentColumn = 1;
 		messageCounter = 0;
 		messageSpeedCounter = 0;
+		
+		subState = 0;
+
 	}
 	
 	public boolean showTransition() {
@@ -112,8 +133,11 @@ public class AnimationHandler {
 	}
 	
 	public void resetTransition() {
+		
 		transitionCounter = 0;
 		transitionLimit = 0;
+		
+		subState = 0;
 	}
 
 	

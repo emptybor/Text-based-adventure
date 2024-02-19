@@ -8,7 +8,8 @@ public class Entity {
 	private int maxHP;
 	private int damage;
 	private int level;
-	
+	private int exp;
+	private int nextExp;
 	private double range;
 	private double size;
 	private String name;
@@ -80,14 +81,30 @@ public class Entity {
 		this.level = level;
 	}
 	public void addLevel() {
-		this.level++;
-		if(this.hp == this.maxHP) {	
-			this.maxHP += 20;
-			this.hp = this.maxHP;
+		level++;
+		if(hp == maxHP) {	
+			maxHP += 20;
+			hp = maxHP;
 		}
 		else {
-		this.maxHP += 20;
+		maxHP += 20;
 		}
+	}
+	
+	public boolean checkLevel() {
+		
+		if(exp >= nextExp) {
+			
+			while(exp >= nextExp) {
+			exp -= nextExp;
+			nextExp += 10;
+			addLevel();
+			}
+			return true;
+			
+		}
+		
+		return false;
 	}
 
 	public double getSize() {
@@ -98,7 +115,22 @@ public class Entity {
 		this.size = size;
 	}
 
-	
+	public int getExp() {
+		return exp;
+	}
 
-	
+	public void setExp(int exp) {
+		this.exp = exp;
+	}
+	public void addExp(int exp) {
+		this.exp += exp;
+	}
+
+	public int getNextExp() {
+		return nextExp;
+	}
+
+	public void setNextExp(int nextExp) {
+		this.nextExp = nextExp;
+	}
 }

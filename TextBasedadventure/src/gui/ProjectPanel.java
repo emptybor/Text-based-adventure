@@ -43,7 +43,7 @@ public class ProjectPanel extends JPanel{
 	public InputHandler inputH = new InputHandler(this);
 	
 	public boolean isSetup = false;
-	public boolean fullScreenOn = true;
+	public boolean fullScreenOn = false;
 	
 	public int tileSizeX;
 	public int tileSizeY;
@@ -201,14 +201,16 @@ public class ProjectPanel extends JPanel{
 		
 		player.setLevel(1);
 		player.setMaxHP(15);
-		player.setMaxHP(player.getHP());
+		player.setHP(player.getMaxHP());
 		player.setDamage(1);
 		player.setName("");
+		player.currentWeapon = "";
 		
 		animH.resetMessage();
 		animH.resetTimeCount();
-		ui.setupTextField();
+		inputH.setupTextField();
 		
+		stageH.stageNum = 2;
 		stageH.prepareForNextStage();
 		
 		for(int i = 0; i < stageH.isExplored.length; i++) {
@@ -221,7 +223,8 @@ public class ProjectPanel extends JPanel{
 		
 		isSetup = false;
 		
-		loadSave.loadStats();
+		loadSave.saveStats();
+		loadSave.saveConfig();
 		
 		gameState = GameState.TitleScreenState;
 		

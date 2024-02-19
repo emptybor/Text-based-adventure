@@ -51,6 +51,9 @@ public class KeyHandler implements KeyListener{
 			case KeyEvent.VK_ESCAPE:
 				ui.pp.inputH.setESCPressed(true);
 				break;
+			case KeyEvent.VK_SPACE:
+				ui.pp.inputH.setSPACEPressed(true);
+				break;
 			case KeyEvent.VK_UP:
 				ui.pp.commandNum--;
 				break;
@@ -75,6 +78,9 @@ public class KeyHandler implements KeyListener{
 			case KeyEvent.VK_E:
 				ui.pp.inputH.setEPressed(true);
 				break;
+			case KeyEvent.VK_SPACE:
+				ui.pp.inputH.setSPACEPressed(true);
+				break;
 			case KeyEvent.VK_UP:
 				ui.pp.commandNum--;
 				break;
@@ -91,6 +97,18 @@ public class KeyHandler implements KeyListener{
 			}
 		}
 		
+		else if(ui.pp.gameState == GameState.StatisticState) {
+			switch(code) {
+			
+			case KeyEvent.VK_ENTER:
+				ui.pp.inputH.setEnterPressed(true);
+				break;
+			case KeyEvent.VK_T:
+				ui.pp.inputH.setTPressed(true);
+				break;
+			}
+		}
+		
 		else if(ui.pp.gameState == GameState.AlertState) {
 			
 			switch(code) {
@@ -100,6 +118,9 @@ public class KeyHandler implements KeyListener{
 				break;
 			case KeyEvent.VK_ESCAPE:
 				ui.pp.inputH.setESCPressed(true);
+				break;
+			case KeyEvent.VK_SPACE:
+				ui.pp.inputH.setSPACEPressed(true);
 				break;
 			case KeyEvent.VK_UP:
 				ui.pp.commandNum--;
@@ -130,6 +151,9 @@ public class KeyHandler implements KeyListener{
 			case KeyEvent.VK_E:
 				ui.pp.inputH.setEPressed(true);
 				break;
+			case KeyEvent.VK_T:
+				ui.pp.inputH.setTPressed(true);
+				break;
 				
 			}
 			}
@@ -145,8 +169,14 @@ public class KeyHandler implements KeyListener{
 			case KeyEvent.VK_ESCAPE:
 				ui.pp.inputH.setESCPressed(true);
 				break;
+			case KeyEvent.VK_SPACE:
+				ui.pp.inputH.setSPACEPressed(true);
+				break;
 			case KeyEvent.VK_E:
 				ui.pp.inputH.setEPressed(true);
+				break;
+			case KeyEvent.VK_T:
+				ui.pp.inputH.setTPressed(true);
 				break;
 			case KeyEvent.VK_UP:
 				ui.pp.commandNum--;
@@ -173,6 +203,12 @@ public class KeyHandler implements KeyListener{
 			case KeyEvent.VK_ESCAPE:
 				ui.pp.inputH.setESCPressed(true);
 				break;
+			case KeyEvent.VK_T:
+				ui.pp.inputH.setTPressed(true);
+				break;
+			case KeyEvent.VK_SPACE:
+				ui.pp.inputH.setSPACEPressed(true);
+				break;
 			case KeyEvent.VK_UP:
 				ui.pp.commandNum--;
 				break;
@@ -197,6 +233,9 @@ public class KeyHandler implements KeyListener{
 				break;
 			case KeyEvent.VK_ESCAPE:
 				ui.pp.inputH.setESCPressed(true);
+				break;
+			case KeyEvent.VK_SPACE:
+				ui.pp.inputH.setSPACEPressed(true);
 				break;
 			case KeyEvent.VK_UP:
 				ui.pp.commandNum--;

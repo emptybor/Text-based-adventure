@@ -22,10 +22,11 @@ public class EnemyHandler {
 		int i = 0;
 		
 		enemies[i] = new Enemy(pp);
-		enemies[i].setName("Palantia");
+		enemies[i].setName("Goblin");
 		enemies[i].setDamage(2);
-		enemies[i].setMaxHP(10);
+		enemies[i].setMaxHP(5);
 		enemies[i].setHP(enemies[i].getMaxHP());
+		enemies[i].setExp(5);
 		
 		i++;
 	}

@@ -19,6 +19,8 @@ public class Player extends Entity{
 		setHP(getMaxHP());
 		setDamage(damage);
 		setLevel(1);
+		setExp(0);
+		setNextExp(10);
 		
 	}
 	
@@ -33,6 +35,7 @@ public class Player extends Entity{
 		default: break;
 		}
 		
+		System.out.println(attackDamage);
 		return (int) attackDamage;
 	}
 	
@@ -44,10 +47,19 @@ public class Player extends Entity{
 			setHP(0);
 		}
 		if(getHP() <= 0) {
-			pp.commandNum = 1;
 			pp.animH.transitionLimit = 300;
 			pp.animH.nextGameState = GameState.LoseState;
 			pp.gameState = GameState.TransitionState;
+		}
+	}
+	
+	public String checkCurrentWeapon() {
+		
+		if(currentWeapon.equals("")) {
+			return "/";
+			}
+		else {
+			return currentWeapon;
 		}
 	}
 }

@@ -71,7 +71,7 @@ public class StageHandler {
 			break;
 		case 5:
 			switch(choiceNum) {
-			case 1: break;
+			case 1: readSignOfCross1(); break;
 			case 2: goLeftOfCross1(); break;
 			case 3: goRightOfCross1(); break;
 			case 4: goBackToCastle(); break;
@@ -128,9 +128,31 @@ public class StageHandler {
 			case 1: goToBreeFromCross1(); break;
 			}
 			break;
+		case 14:
+			switch(choiceNum) {
+			case 1: goBackOfCastle(); break;
+			}
 			
 		default: break;
 		}
+		
+	}
+	
+	private void readSignOfCross1() {
+		
+		prepareForNextStage();
+		
+		stageNum = 14;
+		
+		name = "Cross";
+		
+		pp.animH.messageText = "-> Right [Spring]"
+				+ "\n<- Left  [Bree]"
+				+ "\n\u25BD Back [Castle]";
+		
+		pp.ui.messageChoice[0] = "Enter";
+
+		pp.gameState = GameState.DialogueState;
 		
 	}
 
@@ -171,13 +193,7 @@ public class StageHandler {
 		stageNum = 6;
 
 		if(isExplored(stageNum) == true) {
-		
-		pp.animH.messageText = "You are in front of a Palantia."
-				+ "\nBe careful these monsters are"
-				+ "\nvery harmful!";
-
-		pp.ui.messageChoice[0] = "Enter";
-		
+			checkBeforeFight();
 		}else {
 
 		stageNum = 12;
@@ -246,7 +262,7 @@ public class StageHandler {
 		
 		pp.animH.messageText = "You're on a cross.\nWhere do you want to go?";
 		
-		pp.ui.messageChoice[0] = "Go Ahead";
+		pp.ui.messageChoice[0] = "Read the sign";
 		pp.ui.messageChoice[1] = "Go Left";
 		pp.ui.messageChoice[2] = "Go Right";
 		pp.ui.messageChoice[3] = "Go Back";
@@ -336,15 +352,48 @@ public class StageHandler {
 		
 	}
 	
+	public void checkBeforeFight() {
+		
+		pp.animH.messageText = "You are in front of an Enemy!"
+				+ "\nPrepare yourself for the fight!"
+				+ "\nThe fight begins!";
+
+		pp.ui.messageChoice[0] = "Enter";
+		
+		
+	}
+	
+	public void entryFight() {
+		
+		prepareForNextStage();
+		
+		pp.fightH.stageNum = 1;
+		
+		pp.fightH.name = pp.fightH.currentEnemy.getName();
+		
+		pp.fightH.prepareForFight();
+		pp.fightH.checkChoice();
+		
+		pp.gameState = GameState.FightState;
+		pp.tempGameState = pp.gameState;
+	}
+	
 	private void winDialog() {
 
 		prepareForNextStage();
 		
-		pp.player.addLevel();
+		pp.player.addExp(pp.fightH.currentEnemy.getExp());
 		
 		pp.animH.messageText = "You won the fight against the " + pp.fightH.currentEnemy.getName() + "!"
-				+ "\nYou level up! You are now level " + pp.player.getLevel() + "!";
+				+ "\nYou gather +" + pp.fightH.currentEnemy.getExp() + " experience!"
+				+ "\n";
 		
+		
+		if(pp.player.checkLevel() == true) {
+			
+		pp.animH.messageText += "\nYou level up! You are now level " + pp.player.getLevel() + "!";
+
+		}
 		pp.ui.messageChoice[0] = "Enter";
 		
 		pp.gameState = GameState.DialogueState;
@@ -385,22 +434,8 @@ public class StageHandler {
 	private void save() {
 				
 		pp.loadSave.saveStats();
+		pp.loadSave.saveConfig();
 		
-	}
-	
-	public void entryFight() {
-		
-		prepareForNextStage();
-		
-		pp.fightH.stageNum = 1;
-		
-		pp.fightH.name = pp.fightH.currentEnemy.getName();
-		
-		pp.fightH.prepareForFight();
-		pp.fightH.checkChoice();
-		
-		pp.gameState = GameState.FightState;
-		pp.tempGameState = pp.gameState;
 	}
 	
 	public int checkChoiceLength() {

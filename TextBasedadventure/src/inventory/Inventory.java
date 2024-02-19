@@ -70,6 +70,18 @@ public class Inventory {
 		return false;
 	}
 	
+	public void checkEquippedItem() {
+		
+		for(int i = 0; i < items.length; i++) {
+			if(items[i] != null) {
+			items[i].setEquiped(false);
+			if(items[i].getName().equals(pp.player.currentWeapon)) {
+				items[i].setEquiped(true);
+				}
+			}
+		}		
+	}
+	
 	public int getAmount(String name) {
 		
 		for(int i = 0; i < items.length; i++) {
