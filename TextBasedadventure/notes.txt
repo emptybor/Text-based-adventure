@@ -1,0 +1,25 @@
+﻿Funktionen hinzufügen (sortiert nach Wichtigkeit):
+
+- Story
+
+-> Zum Bürgermeister gehen
+-> Auftrag erhalten, um einen gesuchten Goblin zu toeten
+-> Belohnung Bronzerang
+
+- Inventory
+-> Inventory Ansicht überarbeiten
+-> Ausgewaehltes Item "vergrößern"
+-> Ausgewaehltes Item Text mit anzeigen
+-> Drop down menu -> Mehr Items in der Ansicht verfügbar
+-> "herunterscrollen" ermöglichen
+
+- Bug's
+
+-> Namen Eingabe "flackern" verhindern -> Vielleicht Reihenfolge von "requestFocus" und "repaint"?
+
+- Admin Möglichkeiten
+
+-> erkundete Bereiche kennzeichnen
+-> Level durch Reputation ersetzen.
+-> Damage als "double" definieren
+
